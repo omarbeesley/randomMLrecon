@@ -1,0 +1,102 @@
+
+# print macro commands on screen
+/control/verbose 0
+
+###################################################################
+# geometry must be specified before /run/initialize               # 
+/geometry/source /mnt/e/testML/default_lyso.gdml
+
+# Configure magnetic fields
+# /magfield/scalingfactor          1
+
+# End of geometry configuration                                   # 
+###################################################################
+
+###################################################################
+# Configuration of the physics to be used                         # 
+
+/Physics/SelectList QGSP_BERT_EM4
+#/Physics/SelectList CEX
+/process/had/verbose 0
+/process/em/verbose 0
+
+
+# Decay mode selection
+#/decay/all
+/decay/pimunu
+#/decay/rad_muon
+#/decay/pienu
+#/decay/pienug
+#/decay/rad_michel
+#/decay/rad_michel_rad_muon
+#/decay/pibeta
+
+# Cap muon/pion lifetime to enhance probability of decay in flight
+# /decay/mulifetimecap  50 ps
+# /decay/pilifetimecap 100 ps
+# /decay/pistartatcreation false
+
+# Increase Pion Charge Exchange Cross Section by Factor
+#/Physics/scalePionCEX 1
+
+# End of physics configuration                                    # 
+###################################################################
+
+###################################################################
+# Configuration of the output to be written                       # 
+
+# path to output file. "#RUN#" will be replaced by the run ID
+/output/FileName ./run#RUN#
+
+# Switching on/off branches in the output TTree
+/output/SaveInit         true
+#/output/SaveTrack        true
+/output/SaveDecay        true
+/output/SaveAtar         true
+/output/SaveTracker      true
+/output/SaveCalo         true
+/output/SaveSipm         false
+/output/SaveUpstream     true
+#/output/SaveGhost        true
+#/output/SaveGhostCalo    true
+/output/SaveSplitoff     true
+
+
+# End of output configuration                                     # 
+###################################################################
+
+#==================================================================
+# Initialise the run 
+/run/initialize
+
+# check physics processes and particles.
+# Beware, output is somewhat messy in multithreaded mode
+#/process/list
+#/particle/list
+#/geometry/list
+
+# Configure pion beam
+/gen/select gps
+
+# configure the generic particle source
+/gps/ene/mono 15.0 MeV
+/gps/particle pi+
+/gps/pos/type Surface
+/gps/pos/shape Cylinder
+/gps/pos/centre 0 0 -5 cm
+/gps/pos/radius 0.8 cm
+/gps/pos/halfz 0.0001 cm
+/gps/direction 0 0 1
+
+# =================================================================
+
+# visualize geometry and events for debugging
+#/vis/open HepRepFile
+#/vis/drawVolume
+#/vis/scene/add/trajectories
+
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Start the run
+
+/run/beamOn 1000000
